@@ -4,6 +4,7 @@ using HairSalon.ModelViews.ApplicationUserModelViews;
 using HairSalon.ModelViews.AppointmentModelViews;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalonBE.API.Controllers
@@ -89,5 +90,5 @@ namespace HairSalonBE.API.Controllers
 				return BadRequest(new { Message = ex.Message });
 			}
 		}
-	}
+    }
 }
