@@ -1,4 +1,5 @@
 ﻿using HairSalon.Contract.Repositories.Entity;
+using System.ComponentModel.DataAnnotations;
 
 namespace HairSalon.ModelViews.ServiceAppointmentModelViews;
 
@@ -10,7 +11,9 @@ public class ServiceAppointmentModelView
     public string? Description { get; set; }
     public DateTimeOffset CreatedTime { get; set; }
     public string? CreatedBy { get; set; }
-    public Service Service { get; set; }
+	public int Rate { get; set; }
+	public string? Comment { get; set; }
+	public Service Service { get; set; }
     public Appointment Appointment { get; set; }
 
     public ServiceAppointmentModelView(ServiceAppointment serviceAppointment)

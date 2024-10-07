@@ -56,7 +56,7 @@ namespace HairSalon.Services.Service
             await _unitOfWork.GetRepository<ServiceEntity>().InsertAsync(newService);
             await _unitOfWork.SaveAsync();
 
-            return _mapper.Map<ServiceModelView>(model);
+            return _mapper.Map<ServiceModelView>(newService);
 
         }
 

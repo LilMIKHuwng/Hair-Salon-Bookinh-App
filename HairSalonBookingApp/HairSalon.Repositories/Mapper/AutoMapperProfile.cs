@@ -40,6 +40,7 @@ namespace HairSalon.Repositories.Mapper
             CreateMap<Service, UpdatedServiceModelView>();
             CreateMap<UpdatedServiceModelView, Service>();
             CreateMap<CreateServiceModelView, Service>();
+            CreateMap<CreateServiceModelView, ServiceModelView>();
             
 			CreateMap<ApplicationRoles, RoleModelView>();
 			CreateMap<ApplicationRoles, CreateRoleModelView>();
@@ -53,11 +54,11 @@ namespace HairSalon.Repositories.Mapper
 			CreateMap<CreateSalaryPaymentModelView, SalaryPayment>();
 			CreateMap<UpdatedSalaryPaymentModelView, SalaryPayment>();
 
-			CreateMap<ApplicationUsers, UserModelView>();
-            CreateMap<ApplicationUsers, CreateUserModelView>();
-            CreateMap<ApplicationUsers, UpdateUserModelView>();
-            CreateMap<CreateUserModelView, ApplicationUsers>();
-            CreateMap<UpdateUserModelView, ApplicationUsers>();
+			CreateMap<UserInfo, UserModelView>();
+            CreateMap<UserInfo, CreateUserModelView>();
+            CreateMap<UserInfo, UpdateUserModelView>();
+            CreateMap<CreateUserModelView, UserInfo>();
+            CreateMap<UpdateUserModelView, UserInfo>();
 
 			CreateMap<ApplicationUsers, AppUserModelView>();
 			CreateMap<ApplicationUsers, CreateAppUserModelView>();

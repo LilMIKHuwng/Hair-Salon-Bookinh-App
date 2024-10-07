@@ -2,10 +2,11 @@
 using HairSalon.Contract.Services.Interface;
 using HairSalon.Core;
 using HairSalon.ModelViews.ServiceAppointmentModelViews;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalonBE.API.Controllers;
-
+[Authorize(Roles = "User")]
 [Route("api/[controller]")]
 [ApiController]
 public class ServiceAppointmentController : ControllerBase
@@ -47,8 +48,8 @@ public class ServiceAppointmentController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ServiceAppointment>> CreateServiceAppointment(
-        CreatServiceAppointmentModelView creatServiceAppointmentModelView)
+    public async Task<ActionResult<ServiceAppointment>> CreateServiceAppointment([FromQuery]
+		CreatServiceAppointmentModelView creatServiceAppointmentModelView)
     {
         try
         {
@@ -62,8 +63,8 @@ public class ServiceAppointmentController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult<Boolean>> UpdateServiceAppointment(
-         EditServiceAppointmentModelView editServiceAppointmentModelView)
+    public async Task<ActionResult<Boolean>> UpdateServiceAppointment([FromQuery]
+		 EditServiceAppointmentModelView editServiceAppointmentModelView)
     {
         try
         {

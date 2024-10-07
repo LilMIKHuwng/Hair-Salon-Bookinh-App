@@ -8,9 +8,9 @@ public interface IServiceAppointment
     Task<IList<ServiceAppointmentModelView>> GetAllServiceAppointment();
     Task<IList<ServiceAppointmentModelView>> GetAllServiceAppointmentByServiceId(string serviceId);
     Task<IList<ServiceAppointmentModelView>> GetAllServiceAppointmentByAppointmentID(string appointmentId);
-    Task<Boolean> DeleteServiceAppointment(DeleteServiceAppointmentModelView deleteServiceAppointmentModelView);
+    Task<string> DeleteServiceAppointment(DeleteServiceAppointmentModelView deleteServiceAppointmentModelView);
     Task<List<ServiceAppointmentModelView>> GetAllServiceAppointmentByUserId(string userId);
-    Task<Boolean> EditServiceAppointment(EditServiceAppointmentModelView editServiceAppointmentModelView);
-    Task<ServiceAppointment> CreateServiceAppointment(CreatServiceAppointmentModelView creatServiceAppointmentModelView);
+    Task<string> EditServiceAppointment(EditServiceAppointmentModelView editServiceAppointmentModelView);
+    Task<string> CreateServiceAppointment(CreatServiceAppointmentModelView creatServiceAppointmentModelView);
     Task<ServiceAppointmentModelView> GetServiceAppointmentById(String id);
 }

@@ -16,7 +16,7 @@ namespace HairSalon.ModelViews.AppointmentModelViews
         [Required(ErrorMessage = "PointsEarned is required.")]
         public int PointsEarned { get; set; }
 
-        [Required(ErrorMessage = "AppointmentDate is required.")]
-        public DateTime AppointmentDate { get; set; }
+        // [Required(ErrorMessage = "AppointmentDate is required.")]
+        // public DateTime AppointmentDate { get; set; }
     }
 }

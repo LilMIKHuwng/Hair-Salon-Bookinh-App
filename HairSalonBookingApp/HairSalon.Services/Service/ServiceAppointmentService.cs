@@ -76,7 +76,7 @@ public class ServiceAppointmentService : IServiceAppointment
     }
 
 
-    public async Task<Boolean> DeleteServiceAppointment(
+    public async Task<string> DeleteServiceAppointment(
         DeleteServiceAppointmentModelView deleteServiceAppointmentModelView)
     {
         if (deleteServiceAppointmentModelView.Id.IsNullOrEmpty())
@@ -97,7 +97,7 @@ public class ServiceAppointmentService : IServiceAppointment
 
         await _unitOfWork.GetRepository<ServiceAppointment>().UpdateAsync(serviceAppointment);
         await _unitOfWork.SaveAsync();
-        return true;
+        return "Deleted successfully";
     }
 
 
@@ -109,7 +109,7 @@ public class ServiceAppointmentService : IServiceAppointment
         }
 
         IQueryable<ServiceAppointment> serviceAppointments = _unitOfWork.GetRepository<ServiceAppointment>()
-            .Entities.Where(entity => entity.Appointment.User != null )
+            .Entities.Where(entity => entity.Appointment.UserId.Equals(userId) )
             .OrderByDescending(entity => !entity.DeletedTime.HasValue)
             .ThenByDescending(entity => entity.CreatedTime);
 
@@ -118,7 +118,7 @@ public class ServiceAppointmentService : IServiceAppointment
         return _mapper.Map<List<ServiceAppointmentModelView>>(appointments);
     }
 
-    public async Task<Boolean> EditServiceAppointment(EditServiceAppointmentModelView editServiceAppointmentModelView)
+    public async Task<string> EditServiceAppointment(EditServiceAppointmentModelView editServiceAppointmentModelView)
     {
         if (editServiceAppointmentModelView == null)
         {
@@ -163,15 +163,15 @@ public class ServiceAppointmentService : IServiceAppointment
         serviceAppointment.Service = service;
         serviceAppointment.ServiceId = editServiceAppointmentModelView.ServiceId;
         serviceAppointment.LastUpdatedTime = DateTimeOffset.UtcNow;
-        serviceAppointment.LastUpdatedBy = editServiceAppointmentModelView.LastUpdatedBy;
+        serviceAppointment.LastUpdatedBy = service.ShopId;
         serviceAppointment.Description = editServiceAppointmentModelView.Description;
 
         await _unitOfWork.GetRepository<ServiceAppointment>().UpdateAsync(serviceAppointment);
         await _unitOfWork.GetRepository<ServiceAppointment>().SaveAsync();
-        return true;
+        return "Edit successfully";
     }
 
-    public async Task<ServiceAppointment> CreateServiceAppointment(
+    public async Task<string> CreateServiceAppointment(
         CreatServiceAppointmentModelView creatServiceAppointmentModelView)
     {
         if (creatServiceAppointmentModelView == null)
@@ -209,12 +209,13 @@ public class ServiceAppointmentService : IServiceAppointment
             Appointment = appointment,
             Service = service,
             CreatedTime = DateTimeOffset.UtcNow,
-            CreatedBy = creatServiceAppointmentModelView.CreatedBy,
+            CreatedBy = service.ShopId,
             Description = creatServiceAppointmentModelView.Description
         };
         await _unitOfWork.GetRepository<ServiceAppointment>().InsertAsync(serviceAppointment);
         await _unitOfWork.GetRepository<ServiceAppointment>().SaveAsync();
-        return _mapper.Map<ServiceAppointment>(serviceAppointment);
+        //return _mapper.Map<ServiceAppointment>(serviceAppointment);
+        return "Created successfully";
     }
 
 

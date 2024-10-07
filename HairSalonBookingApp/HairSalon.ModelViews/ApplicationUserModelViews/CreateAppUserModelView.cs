@@ -21,5 +21,6 @@ namespace HairSalon.ModelViews.ApplicationUserModelViews
 		[Phone(ErrorMessage = "Invalid Phone Number.")]
 		[StringLength(20, ErrorMessage = "Phone number cannot be longer than 20 characters.")]
 		public string PhoneNumber { get; set; }
+		public string RoleName { get; set; }
 	}
 }

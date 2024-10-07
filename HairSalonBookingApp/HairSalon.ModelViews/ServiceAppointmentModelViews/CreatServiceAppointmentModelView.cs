@@ -1,4 +1,6 @@
-﻿namespace HairSalon.ModelViews.ServiceAppointmentModelViews;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HairSalon.ModelViews.ServiceAppointmentModelViews;
 
 
 public class CreatServiceAppointmentModelView
@@ -9,8 +11,11 @@ public class CreatServiceAppointmentModelView
     
     public string? Description { get; set; }
 
-    public string? CreatedBy { get; set; }
-    
-    public DateTimeOffset CreatedTime { get; set; }
-    
+	[Required]
+	[Range(1, 5)]
+	public int Rate { get; set; }
+
+	[MaxLength(255)]
+	public string? Comment { get; set; }
+
 }

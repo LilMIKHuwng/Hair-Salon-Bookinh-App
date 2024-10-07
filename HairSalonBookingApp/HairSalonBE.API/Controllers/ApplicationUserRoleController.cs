@@ -1,10 +1,12 @@
 ﻿using HairSalon.Contract.Services.Interface;
 using HairSalon.Core;
 using HairSalon.ModelViews.AppUserRoleViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalonBE.API.Controllers
 {
+	[Authorize(Roles = "User")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class ApplicationUserRoleController : ControllerBase
@@ -44,7 +46,7 @@ namespace HairSalonBE.API.Controllers
 			}
 		}
 
-		[HttpGet("{id}")]
+		[HttpGet()]
 		public async Task<ActionResult<AppUserRoleModelView>> GetApplicationUserRoleById(string UserId, string RoleId)
 		{
 			try
@@ -58,7 +60,7 @@ namespace HairSalonBE.API.Controllers
 			}
 		}
 
-		[HttpPut("{id}")]
+		[HttpPut()]
 		public async Task<IActionResult> UpdateApplicationUserRole(string UserId, string RoleId, [FromQuery] UpdateAppUserRoleModelView model)
 		{
 			try
@@ -72,7 +74,7 @@ namespace HairSalonBE.API.Controllers
 			}
 		}
 
-		[HttpDelete("{id}")]
+		[HttpDelete()]
 		public async Task<IActionResult> DeleteApplicationUserRole(string UserId, string RoleId)
 		{
 			try

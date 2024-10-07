@@ -4,8 +4,8 @@ namespace HairSalon.ModelViews.UserModelViews
 {
 	public class UpdateUserModelView
 	{
-		[Required(ErrorMessage = "Fullname is required.")]
-		public string FullName { get; set; }
+		public string Lastname { get; set; }
+		public string Firstname { get; set; }
 
 		[Required(ErrorMessage = "Bank Account is required.")]
 		public string BankAccount { get; set; }

@@ -4,7 +4,6 @@ namespace HairSalon.ModelViews.RoleModelViews
 {
     public class UpdatedRoleModelView
     {
-		[Required(ErrorMessage = "RoleName is required.")]
-		public string Name { get; set;}
+		public string? Name { get; set;}
     }
 }

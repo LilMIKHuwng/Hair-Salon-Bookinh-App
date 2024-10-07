@@ -5,10 +5,9 @@ namespace HairSalon.Contract.Services.Interface
 {
     public interface IRoleService
     {
-        Task<BasePaginatedList<RoleModelView>> GetAllRoleAsync(int pageNumber, int pageSize);
-		Task<RoleModelView> AddRoleAsync(CreateRoleModelView model);
-		Task<RoleModelView> UpdateRoleAsync(string id, UpdatedRoleModelView model);
+        Task<BasePaginatedList<RoleModelView>> GetAllRoleAsync(int pageNumber, int pageSize, string id, string name);
+		Task<string> AddRoleAsync(CreateRoleModelView model);
+		Task<string> UpdateRoleAsync(string id, UpdatedRoleModelView model);
 		Task<string> DeleteRoleAsync(string id);
-		Task<RoleModelView> GetRoleAsync(string id);
 	}
 }

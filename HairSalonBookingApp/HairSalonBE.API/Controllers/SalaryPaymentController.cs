@@ -2,10 +2,12 @@
 using HairSalon.Core;
 using Microsoft.AspNetCore.Mvc;
 using HairSalon.ModelViews.SalaryPaymentModelViews;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HairSalonBE.API.Controllers
 {
-    [Route("api/[controller]")]
+	[Authorize(Roles = "User")]
+	[Route("api/[controller]")]
     [ApiController]
     public class SalaryPaymentController : ControllerBase
     {

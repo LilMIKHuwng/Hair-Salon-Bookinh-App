@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalonBE.API.Controllers
 {
-	[Authorize(Roles = "User")]
+	
 	[Route("api/[controller]")]
 	[ApiController]
 	public class ApplicationUserController : ControllerBase

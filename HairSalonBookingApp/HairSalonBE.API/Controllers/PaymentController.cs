@@ -1,11 +1,13 @@
 ﻿using HairSalon.Contract.Services.Interface;
 using HairSalon.Core;
 using HairSalon.ModelViews.PaymentModelViews;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HairSalonBE.API.Controllers
 {
-    [Route("api/[controller]")]
+	[Authorize(Roles = "User")]
+	[Route("api/[controller]")]
     [ApiController]
     public class PaymentController : ControllerBase
     {

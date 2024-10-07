@@ -28,7 +28,7 @@ namespace HairSalon.Services.Service
 			var userInfo = new UserInfo
             {
                 Firstname = model.FirstName,
-				Lastname = model.LastName
+				Lastname = model.LastName,
             };
 
             var newAccount = new ApplicationUsers
@@ -55,7 +55,7 @@ namespace HairSalon.Services.Service
             await _unitOfWork.SaveAsync();
 
             var roleRepository = _unitOfWork.GetRepository<ApplicationRoles>();
-            var userRole = await roleRepository.Entities.FirstOrDefaultAsync(r => r.Name == "User");
+            var userRole = await roleRepository.Entities.FirstOrDefaultAsync(r => r.Name == model.RoleName);
             if (userRole == null)
             {
                 throw new Exception("The 'User' role does not exist. Please make sure to create it first.");
