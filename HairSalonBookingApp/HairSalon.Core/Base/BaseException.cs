@@ -43,7 +43,7 @@ namespace HairSalon.Core.Base
 
             public ErrorDetail ErrorDetail { get; }
 
-            public ErrorException(int statusCode, string errorCode, string message)
+            public ErrorException(int statusCode, string errorCode, string message = null)
             {
                 StatusCode = statusCode;
                 ErrorDetail = new ErrorDetail

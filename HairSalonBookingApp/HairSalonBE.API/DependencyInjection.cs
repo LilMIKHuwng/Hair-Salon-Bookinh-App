@@ -46,8 +46,10 @@ namespace HairSalonBE.API
              .AddDefaultTokenProviders();
         }
 
+
         public static void AddServices(this IServiceCollection services)
         {
+
             services
                 //.AddScoped<IUserService, UserService>()
                 .AddScoped<IRoleService, RoleService>()
@@ -59,11 +61,9 @@ namespace HairSalonBE.API
                 .AddScoped<IAppUserRoleService, AppUserRoleService>()
                 .AddScoped<IAppUserService, AppUserService>()
                 .AddScoped<IServiceAppointment, ServiceAppointmentService>()
+                /*.AddScoped<IEmailService, EmailService>()*/
                 .AddScoped<TokenService>()
-                ;
-
+            ;
         }
-        
-        
     }
 }

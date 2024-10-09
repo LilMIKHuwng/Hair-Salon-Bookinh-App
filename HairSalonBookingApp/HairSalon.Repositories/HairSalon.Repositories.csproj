@@ -36,4 +36,9 @@
     <ProjectReference Include="..\HairSalon.ModelViews\HairSalon.ModelViews.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Data\Migrations\" />
+  </ItemGroup>
+
 </Project>

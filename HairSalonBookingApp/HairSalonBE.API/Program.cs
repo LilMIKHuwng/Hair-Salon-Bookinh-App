@@ -5,6 +5,8 @@ using HairSalon.Contract.Repositories.SeedData;
 using HairSalon.Repositories.Context;
 using HairSalonBE.API;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -74,6 +76,19 @@ builder.Services.AddAuthentication(x =>
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
+.AddCookie()
+.AddGoogle(googleOptions =>
+{
+    // Đọc thông tin Authentication:Google từ appsettings.json
+    IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+
+    // Thiết lập ClientID và ClientSecret để truy cập API google
+    googleOptions.ClientId = googleAuthNSection["ClientId"];
+    googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+    // Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
+    googleOptions.CallbackPath = "/signin-google";
+
+})
 .AddJwtBearer(x =>
 {
     x.RequireHttpsMetadata = false;
@@ -135,3 +150,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HairSalon.Repositories.Data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241003015905_First")]
+    [Migration("20241009023029_First")]
     partial class First
     {
         /// <inheritdoc />
@@ -445,6 +445,10 @@ namespace HairSalon.Repositories.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Comment")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -466,6 +470,9 @@ namespace HairSalon.Repositories.Data.Migrations
 
                     b.Property<DateTimeOffset>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Rate")
+                        .HasColumnType("int");
 
                     b.Property<string>("ServiceId")
                         .IsRequired()

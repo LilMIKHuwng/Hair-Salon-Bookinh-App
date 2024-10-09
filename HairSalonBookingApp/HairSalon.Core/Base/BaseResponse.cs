@@ -1,5 +1,6 @@
 ﻿using HairSalon.Core.Constants;
 using HairSalon.Core.Utils;
+using Microsoft.AspNetCore.Identity;
 
 namespace HairSalon.Core.Base
 {
@@ -8,6 +9,7 @@ namespace HairSalon.Core.Base
         public T? Data { get; set; }
         public string? Message { get; set; }
         public StatusCodeHelper StatusCode { get; set; }
+
         public string? Code { get; set; }
         public BaseResponse(StatusCodeHelper statusCode, string code, T? data, string? message)
         {
