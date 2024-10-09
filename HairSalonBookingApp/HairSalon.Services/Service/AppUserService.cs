@@ -21,12 +21,15 @@ namespace HairSalon.Services.Service
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IPasswordHasher<ApplicationUsers> _passwordHasher;
-        public AppUserService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor, IPasswordHasher<ApplicationUsers> passwordHasher)
+
+        private readonly UserManager<ApplicationUsers> _userManager;
+        public AppUserService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor, IPasswordHasher<ApplicationUsers> passwordHasher, UserManager<ApplicationUsers> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _contextAccessor = httpContextAccessor;
             _passwordHasher = passwordHasher;
+            _userManager = userManager;
         }
 
         public async Task<string> AddAppUserAsync(CreateAppUserModelView model)
@@ -64,6 +67,7 @@ namespace HairSalon.Services.Service
                 Id = Guid.NewGuid(),
                 UserName = model.UserName,
                 Email = model.Email,
+                NormalizedEmail = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserInfo = userInfo
@@ -102,29 +106,50 @@ namespace HairSalon.Services.Service
                 LastUpdatedTime = DateTime.UtcNow
             };
 
-			await userRoleRepository.InsertAsync(applicationUserRole);
-			await _unitOfWork.SaveAsync();
+            await userRoleRepository.InsertAsync(applicationUserRole);
 
-			return "User added successfully.";
-		}
+            await _unitOfWork.SaveAsync();
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(newAccount);
+            MailService.SendEmail(model.Email, "Code verify", code);
+            return "Please confirm email with the code that you have recieved " + code;
+        }
 
-		public async Task<string> DeleteAppUserAsync(string id)
-		{
-			if (string.IsNullOrWhiteSpace(id))
-			{
-				return "Please provide a valid Application User ID.";
-			}
+        public async Task<string> ConfirmEmailAsync(string email, string code)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return "User not found.";
+            }
 
-			var existingUser = await _unitOfWork.GetRepository<ApplicationUsers>().Entities
-				.FirstOrDefaultAsync(s => s.Id == Guid.Parse(id) && !s.DeletedTime.HasValue);
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+            {
+                return "Email confirmed successfully.";
+            }
+            else
+            {
+                return "Error confirming email.";
+            }
+        }
 
-			if (existingUser == null)
-			{
-				return "The Application User cannot be found or has been deleted!";
-			}
+        public async Task<string> DeleteAppUserAsync(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return "Please provide a valid Application User ID.";
+            }
 
-			existingUser.DeletedTime = DateTimeOffset.UtcNow;
-			existingUser.DeletedBy = _contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value;
+            var existingUser = await _unitOfWork.GetRepository<ApplicationUsers>().Entities
+                .FirstOrDefaultAsync(s => s.Id == Guid.Parse(id) && !s.DeletedTime.HasValue);
+
+            if (existingUser == null)
+            {
+                return "The Application User cannot be found or has been deleted!";
+            }
+
+            existingUser.DeletedTime = DateTimeOffset.UtcNow;
+            existingUser.DeletedBy = _contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value;
 
             _unitOfWork.GetRepository<ApplicationUsers>().Update(existingUser);
             await _unitOfWork.SaveAsync();
@@ -235,7 +260,7 @@ namespace HairSalon.Services.Service
 
             // Find the user by Username
             var user = await accountRepository.Entities
-                .FirstOrDefaultAsync(x => x.UserName == model.Username && x.DeletedTime == null);
+                .FirstOrDefaultAsync(x => x.UserName == model.Username && x.DeletedTime == null && x.EmailConfirmed == true);
 
             if (user == null)
             {
@@ -286,43 +311,43 @@ namespace HairSalon.Services.Service
             return user; // Return the authenticated user
         }
 
-public async Task<BasePaginatedList<AppUserModelView>> GetAllAppUserAsync(int pageNumber, int pageSize, string id, string email, string phoneNumber)
-		{
-			// Start building the query
-			IQueryable<ApplicationUsers> userQuery = _unitOfWork.GetRepository<ApplicationUsers>().Entities
-				.Where(p => !p.DeletedTime.HasValue)
-				.OrderByDescending(s => s.CreatedTime);
+        public async Task<BasePaginatedList<AppUserModelView>> GetAllAppUserAsync(int pageNumber, int pageSize, string id, string email, string phoneNumber)
+        {
+            // Start building the query
+            IQueryable<ApplicationUsers> userQuery = _unitOfWork.GetRepository<ApplicationUsers>().Entities
+                .Where(p => !p.DeletedTime.HasValue)
+                .OrderByDescending(s => s.CreatedTime);
 
-			// Apply filtering by Id, Email, and PhoneNumber if provided
-			if (!string.IsNullOrWhiteSpace(id))
-			{
-				userQuery = userQuery.Where(p => p.Id.ToString() == id);
-			}
+            // Apply filtering by Id, Email, and PhoneNumber if provided
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                userQuery = userQuery.Where(p => p.Id.ToString() == id);
+            }
 
-			if (!string.IsNullOrWhiteSpace(email))
-			{
-				userQuery = userQuery.Where(p => p.Email.Contains(email));
-			}
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                userQuery = userQuery.Where(p => p.Email.Contains(email));
+            }
 
-			if (!string.IsNullOrWhiteSpace(phoneNumber))
-			{
-				userQuery = userQuery.Where(p => p.PhoneNumber.Contains(phoneNumber));
-			}
+            if (!string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                userQuery = userQuery.Where(p => p.PhoneNumber.Contains(phoneNumber));
+            }
 
-			// Get total count of records after filtering
-			int totalCount = await userQuery.CountAsync();
+            // Get total count of records after filtering
+            int totalCount = await userQuery.CountAsync();
 
-			// Apply pagination
-			List<ApplicationUsers> paginatedUsers = await userQuery
-				.Skip((pageNumber - 1) * pageSize)
-				.Take(pageSize)
-				.ToListAsync();
+            // Apply pagination
+            List<ApplicationUsers> paginatedUsers = await userQuery
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-			// Map entities to model views
-			List<AppUserModelView> appUserModelViews = _mapper.Map<List<AppUserModelView>>(paginatedUsers);
+            // Map entities to model views
+            List<AppUserModelView> appUserModelViews = _mapper.Map<List<AppUserModelView>>(paginatedUsers);
 
-			// Return the paginated list with users
-			return new BasePaginatedList<AppUserModelView>(appUserModelViews, totalCount, pageNumber, pageSize);
-		}
+            // Return the paginated list with users
+            return new BasePaginatedList<AppUserModelView>(appUserModelViews, totalCount, pageNumber, pageSize);
+        }
     }
 }

@@ -43,6 +43,7 @@ namespace HairSalonBE.API
         {
             services.AddIdentity<ApplicationUsers, ApplicationRoles>(options =>
             {
+                options.SignIn.RequireConfirmedEmail = true;
             })
              .AddEntityFrameworkStores<DatabaseContext>()
              .AddDefaultTokenProviders();

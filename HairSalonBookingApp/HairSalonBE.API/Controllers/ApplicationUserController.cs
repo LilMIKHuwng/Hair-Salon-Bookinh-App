@@ -44,5 +44,11 @@ namespace HairSalonBE.API.Controllers
             string result = await _appUserService.DeleteAppUserAsync(userId);
             return Ok(result);
         }
+
+        [HttpPost("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string email, string code) {
+            string result = await _appUserService.ConfirmEmailAsync(email, code);
+            return Ok(result);
+        }
     }
 }
