@@ -50,5 +50,13 @@ namespace HairSalonBE.API.Controllers
             string result = await _appUserService.ConfirmEmailAsync(email, code);
             return Ok(result);
         }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _appUserService.LogoutAsync();
+            return Ok("Logged out successfully.");
+        }
+
     }
 }

@@ -21,15 +21,16 @@ namespace HairSalon.Services.Service
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IPasswordHasher<ApplicationUsers> _passwordHasher;
-
+        private readonly SignInManager<ApplicationUsers> _signInManager;
         private readonly UserManager<ApplicationUsers> _userManager;
-        public AppUserService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor, IPasswordHasher<ApplicationUsers> passwordHasher, UserManager<ApplicationUsers> userManager)
+        public AppUserService(SignInManager<ApplicationUsers> signInManager, IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor, IPasswordHasher<ApplicationUsers> passwordHasher, UserManager<ApplicationUsers> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _contextAccessor = httpContextAccessor;
             _passwordHasher = passwordHasher;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public async Task<string> AddAppUserAsync(CreateAppUserModelView model)
@@ -348,6 +349,11 @@ namespace HairSalon.Services.Service
 
             // Return the paginated list with users
             return new BasePaginatedList<AppUserModelView>(appUserModelViews, totalCount, pageNumber, pageSize);
+        }
+
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
         }
     }
 }
